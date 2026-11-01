@@ -31,12 +31,12 @@ func chat(assistant Assistant) http.HandlerFunc {
 			writeError(w, http.StatusBadRequest, "Question must be between 1 and 4000 characters.")
 			return
 		}
-		answer, err := assistant.Ask(r.Context(), question)
+		result, err := assistant.Ask(r.Context(), question)
 		if err != nil {
 			writeError(w, http.StatusBadGateway, "Unable to get a response from NaraRouter. Check the server configuration and try again.")
 			return
 		}
-		_ = json.NewEncoder(w).Encode(map[string]string{"answer": answer})
+		_ = json.NewEncoder(w).Encode(result)
 	}
 }
 func writeError(w http.ResponseWriter, status int, message string) {

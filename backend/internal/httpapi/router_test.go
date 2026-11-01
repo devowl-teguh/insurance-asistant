@@ -8,6 +8,8 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"insurance-assistant/backend/internal/assistant"
 )
 
 type fakeAssistant struct {
@@ -16,9 +18,9 @@ type fakeAssistant struct {
 	question string
 }
 
-func (f *fakeAssistant) Ask(_ context.Context, q string) (string, error) {
+func (f *fakeAssistant) Ask(_ context.Context, q string) (assistant.Result, error) {
 	f.question = q
-	return f.answer, f.err
+	return assistant.Result{Answer: f.answer}, f.err
 }
 
 func TestHealth(t *testing.T) {

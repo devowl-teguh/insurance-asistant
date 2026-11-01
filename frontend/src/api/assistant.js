@@ -6,5 +6,5 @@ export async function askAssistant(question) {
   });
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || 'Unable to send your question.');
-  return data.answer;
+  return data;
 }

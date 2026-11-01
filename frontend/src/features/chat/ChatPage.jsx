@@ -26,8 +26,8 @@ export default function ChatPage() {
     setMessages((previous) => [...previous, { role: 'You', content: value }]);
     setQuestion(''); setError(''); setLoading(true);
     try {
-      const answer = await askAssistant(value);
-      setMessages((previous) => [...previous, { role: 'Assistant', content: answer }]);
+      const result = await askAssistant(value);
+      setMessages((previous) => [...previous, { role: 'Assistant', content: result.answer, sources: result.sources || [] }]);
     } catch (err) { setError(err.message); setQuestion(value); }
     finally { setLoading(false); }
   }
@@ -37,10 +37,10 @@ export default function ChatPage() {
     <section>
       <p className="eyebrow">YOUR INSURANCE LEARNING COMPANION</p>
       <h1>Insurance, made clearer.</h1>
-      <p>Ask a general question about insurance. Policy documents and citations are coming in the next phase.</p>
+      <p>Ask a question about the fictional travel and home policies. The assistant searches policy sections and shows the passages it used.</p>
       <div className="chat" aria-live="polite" aria-busy={loading}>
-        {messages.length === 0 && <p className="empty">Try asking: “What is an insurance deductible?”</p>}
-        {messages.map((message, index) => <article className="message" key={index}><strong>{message.role}</strong>{message.role === 'Assistant' ? <div className="markdown"><ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown></div> : <p>{message.content}</p>}</article>)}
+        {messages.length === 0 && <p className="empty">Try asking: “Does the travel policy cover emergency medical treatment overseas?”</p>}
+        {messages.map((message, index) => <article className="message" key={index}><strong>{message.role}</strong>{message.role === 'Assistant' ? <div className="markdown"><ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>{message.sources?.length > 0 && <div className="sources"><strong>Retrieved policy passages</strong>{message.sources.map((source) => <details key={source.id}><summary>[{source.id}] {source.document} — {source.section}</summary><p>{source.text}</p></details>)}</div>}</div> : <p>{message.content}</p>}</article>)}
         {loading && <p className="empty">Thinking…</p>}
       </div>
       <form onSubmit={submit}>
@@ -49,7 +49,7 @@ export default function ChatPage() {
         <div className="form-footer"><span>Each question is sent independently.</span><button disabled={loading || !question.trim()}>{loading ? 'Sending…' : 'Ask assistant'}</button></div>
       </form>
       {error && <p className="error" role="alert">{error}</p>}
-      <small>Use fictional data. The assistant cannot access your policy and may make mistakes.</small>
+      <small>Fictional policies only. Answers may be incorrect; check the displayed source passages.</small>
     </section>
   </main>;
 }

@@ -10,6 +10,7 @@ import (
 	"insurance-assistant/backend/internal/config"
 	"insurance-assistant/backend/internal/httpapi"
 	"insurance-assistant/backend/internal/llm"
+	"insurance-assistant/backend/internal/policy"
 )
 
 func main() {
@@ -17,7 +18,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	service := assistant.New(llm.NewNaraRouter(cfg.NaraAPIKey, cfg.NaraModel))
+	policies, err := policy.Load(cfg.PolicyDir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	service := assistant.New(llm.NewNaraRouter(cfg.NaraAPIKey, cfg.NaraModel), policies)
 	server := &http.Server{Addr: ":" + cfg.Port, Handler: httpapi.NewHandler(service), ReadHeaderTimeout: 5 * time.Second}
 	log.Printf("API listening on http://localhost:%s", cfg.Port)
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {

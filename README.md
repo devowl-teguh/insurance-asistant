@@ -1,6 +1,6 @@
 # Insurance Assistant
 
-A learning project for building an AI-powered policy assistant with Go, React, and NaraRouter. Phase 2 provides general insurance chat; policy retrieval and citations are planned for Phase 3. Each question is sent independently and the assistant cannot access policy documents yet.
+A learning project for building an AI-powered policy assistant with Go, React, and NaraRouter. The assistant searches fictional policy sections, sends relevant passages to NaraRouter, and shows the passages with its answer. Each question is sent independently. This simple keyword search can miss relevant passages and model answers can be wrong.
 
 ## Project structure
 
@@ -11,11 +11,12 @@ backend/
   internal/httpapi/   HTTP routes and handlers
   internal/assistant/ Assistant service and model interface
   internal/llm/       NaraRouter client
+  internal/policy/    Fictional policy loading and keyword search
 frontend/
   src/api/            Backend API client
   src/features/chat/  Chat interface
   src/styles/         Shared styles
-data/policies/        Fictional policy documents for a later phase
+data/policies/        Fictional Markdown policy documents
 docs/                 Architecture and learning checklist
 ```
 
@@ -44,7 +45,7 @@ npm install
 npm run dev
 ```
 
-Open the URL printed by Vite. The frontend proxies `/api` requests to `http://localhost:8080`. If the API port changes, update `frontend/vite.config.js` to match. Model requests can incur provider charges. Use fictional data for this learning project.
+Open the URL printed by Vite. The frontend proxies `/api` requests to `http://localhost:8080`. If the API port changes, update `frontend/vite.config.js` to match. Model requests can incur provider charges. Use fictional data for this learning project. Policy files are loaded at startup from `data/policies`; restart the backend after editing them. Optionally set `POLICY_DIR` to another directory. Search is a basic keyword baseline, so citations and answers need review.
 
 Run backend tests with `cd backend && go test ./...`. Build the frontend with `cd frontend && npm run build`.
 

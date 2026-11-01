@@ -19,11 +19,11 @@ Target pace: roughly 8–10 hours per week. Mark an item complete only after it 
 
 ## Week 3 — Policy answers
 
-- [ ] Add fictional policy documents.
-- [ ] Load and search policy passages in Go.
-- [ ] Generate answers grounded in retrieved passages.
-- [ ] Show source passages and handle insufficient information.
-- [ ] Phase 3 complete: policy questions return grounded answers with sources.
+- [x] Add fictional policy documents.
+- [x] Load and search policy passages in Go.
+- [x] Generate answers grounded in retrieved passages.
+- [x] Show source passages and handle insufficient information.
+- [x] Phase 3 complete: policy questions return grounded answers with sources.
 
 ## Week 4 — Evaluation
 

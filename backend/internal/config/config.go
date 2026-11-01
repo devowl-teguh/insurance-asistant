@@ -12,6 +12,7 @@ type Config struct {
 	Port       string
 	NaraAPIKey string
 	NaraModel  string
+	PolicyDir  string
 }
 
 // Load reads a project .env file when present. Existing environment variables take precedence.
@@ -32,6 +33,18 @@ func Load() (Config, error) {
 	}
 	if cfg.NaraModel == "" {
 		cfg.NaraModel = "deepseek-v4.1-flash"
+	}
+	cfg.PolicyDir = strings.TrimSpace(os.Getenv("POLICY_DIR"))
+	if cfg.PolicyDir == "" {
+		for _, path := range []string{"data/policies", "../data/policies"} {
+			if info, err := os.Stat(path); err == nil && info.IsDir() {
+				cfg.PolicyDir = path
+				break
+			}
+		}
+		if cfg.PolicyDir == "" {
+			return Config{}, fmt.Errorf("policy directory not found; set POLICY_DIR")
+		}
 	}
 	if cfg.NaraAPIKey == "" {
 		return Config{}, fmt.Errorf("NARA_API_KEY is required; set it in the project .env or environment")
